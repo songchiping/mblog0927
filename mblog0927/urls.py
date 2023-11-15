@@ -21,5 +21,8 @@ from mysite import views as mv
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',mv.homepage, name='homepage'),
-    path('post/<slug:slug>/', mv.showpost, name="showpost" )    
+    path('post/<slug:slug>/', mv.showpost, name="showpost" )  ,
+    path('about/', mv.about,{'num':1}),
+    path('about/<int:num>',mv.about),  
+    path('post/<int:yr>/<int:mon>/<int:day>/<int:post_num>/', mv.Post, name='post-url')
 ]
