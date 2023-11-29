@@ -10,15 +10,19 @@ def homepage(request):
     hour =now.timetuple().tm_hour
     return render(request, 'index.html' , locals())
 
+def show_all_posts(request):
+    posts = Post.objects.all()
+    return render(request, 'allposts.html', locals())
+
 def showpost(request, slug):
-    try:
-        post=Post.objects.get(slug=slug)
-        if post != None:            
-            return render(request, 'post.html' , locals())
-        else:
-            return redirect("/") #導到首頁
-    except:
-        return redirect("/")
+    post = Post.objects.get(slug=slug) 
+    return render(request, 'post.html', locals())
+    #select * from post where slug=%slug
+    
+def show_comments(request, post_id):
+    #comments = Comment.objects.filter(post=post_id)
+    comments = Post.objects.get(id=post_id).comment_set.all()
+    return render(request, 'comments.html', locals())
 
 import random
 def about(request, num=-1):
