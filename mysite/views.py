@@ -1,15 +1,18 @@
 from django.shortcuts import render
-from mysite.models import Post
-from django.http import HttpResponse
+from mysite.models import Post, Comment
+from django.http import HttpResponseRedirect
 from datetime import datetime
 from django.shortcuts import redirect
+from django.urls import reverse
+
 # Create your views here.
 def homepage(request):
     posts = Post.objects.all()
     now = datetime.now()
-    hour =now.timetuple().tm_hour
-    return render(request, 'index.html' , locals())
-
+    hour = now.timetuple().tm_hour
+    print(f'hour = {hour}')
+    return render(request, 'index.html', locals())
+    
 def show_all_posts(request):
     posts = Post.objects.all()
     return render(request, 'allposts.html', locals())
@@ -23,7 +26,8 @@ def show_comments(request, post_id):
     #comments = Comment.objects.filter(post=post_id)
     comments = Post.objects.get(id=post_id).comment_set.all()
     return render(request, 'comments.html', locals())
-
+    
+    
 import random
 def about(request, num=-1):
     quotes = ['今日事，今日畢',
@@ -34,7 +38,7 @@ def about(request, num=-1):
         quote = random.choice(quotes)
     else:
         quote = quotes[num]
-    return render(request, 'about.html', locals())  
+    return render(request, 'about.html', locals())   
 
 def carlist(request, maker=0):
     car_maker = ['Ford', 'Honda', 'Mazda']
@@ -55,10 +59,24 @@ def carlist(request, maker=0):
     return render(request, 'carlist.html', locals())
 
 '''
-def homepage(request):    
-    post = Post.objects.all() #select * from post
+def homepage(request):
+    posts = Post.objects.all() #select * from post
     post_lists = list()
-    for counter,post in enumerate(post):
-        post_lists.append(f'No.{counter}{post}<br>')
+    for counter, post in enumerate(posts):
+        post_lists.append(f'No. {counter}-{post} <br>')
     return HttpResponse(post_lists)
 '''
+
+
+def new_post(request):
+    print(f'form method: {request.method}')
+    if request.method == 'GET':
+        return render(request, 'myform_1.html', locals())
+    elif request.method == 'POST':
+        title = request.POST['title']
+        slug = request.POST['slug']
+        content = request.POST['content']
+        post = Post(title=title, slug=slug, body=content)
+        post.save()
+        return HttpResponseRedirect(reverse('show-all-posts'))
+    
