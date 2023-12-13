@@ -2,14 +2,16 @@
 {% block title %}歡迎光臨我的部落格{% endblock title %}
 {% block headmessage %}
 <h3 style = 'font-family:標楷體';>本站文章列表</a>
-{%if hour >= 13 %}
-下午安
-{% elif hour < 10 %}
-早安
-{% else %}
-你好
-{% endif %}
-
+<label for='byear'>無異議年分:</labal>
+<select name="byear">
+    {% for year in year %}
+    <option valuee="{{year}}">西元{{year}}</option>
+    {% endfor %}
+</select>
+<imput type='radio' name='ryear' checked>2000</imput>
+<imput type='radio' name='ryear'>2001</imput>
+<imput type='radio' name='ryear'>2002</imput>
+<imput type='radio' name='ryear'>2003</imput>
 {% endblock headmessage %}
 {% block content %}
 
